@@ -201,7 +201,7 @@ const http = customHttp();
 
 const newsService = (function () {
     const apiKey = '47a87bd0ab604b76834b0e6d2fc9b5f7';
-    const apiUrl = 'http://newsapi.org/v2';
+    const apiUrl = 'https://newsapi.org/v2';
 
     return {
         topHeadlines(country = 'ua', callback) {
