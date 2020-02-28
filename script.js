@@ -128,7 +128,7 @@ function myHttpRequest({
 //     console.log(res);
 // });
 
-function http() {
+function customHttp() {
     return {
         get({ url } = {}, callback) {
             try {
@@ -185,14 +185,82 @@ function http() {
     }
 }
 
-const myHttp = http();
-myHttp.post('https://jsonplaceholder.typicode.com/posts', {
-    id: 101,
-    title: 'foo',
-    body: 'bar',
-    userId: 1
-}, {
-    'Content-Type': 'application/json', 'x-auth': 'ajsfjlkf934398043'
-}, (err, res) => {
-    console.log(err, res);
+const http = customHttp();
+
+// http.post('https://jsonplaceholder.typicode.com/posts', {
+//     id: 101,
+//     title: 'foo',
+//     body: 'bar',
+//     userId: 1
+// }, {
+//     'Content-Type': 'application/json', 'x-auth': 'ajsfjlkf934398043'
+// }, (err, res) => {
+//     console.log(err, res);
+// })
+
+
+const newsService = (function () {
+    const apiKey = '47a87bd0ab604b76834b0e6d2fc9b5f7';
+    const apiUrl = 'http://newsapi.org/v2';
+
+    return {
+        topHeadlines(country = 'ua', callback) {
+            http.get({
+                url: `${apiUrl}/top-headlines?country=${country}&category=technology&apiKey=${apiKey}`
+            }, callback)
+        },
+        everything(query, callback) {
+            http://newsapi.org/v2/everything?q=bitcoin&apiKey=47a87bd0ab604b76834b0e6d2fc9b5f7
+            //реализовать выбор категории
+            http.get(`${apiUrl}/everything?q=${query}&apiKey=${apiKey}`, callback);
+        }
+    }
+})();
+
+//Elements UI
+const form = document.querySelector('.news-form');
+const countrySelect = document.querySelector('.country-select');
+const queryInput = document.querySelector('.query-input');
+
+document.addEventListener('DOMContentLoaded', function () {
+    loadNews();
 })
+
+function loadNews() {
+    newsService.topHeadlines('ua', onGetResponse);
+}
+
+
+// function onGetResponse(err, {articles}) { //можем деструктурировать response
+function onGetResponse(err, res) {
+    renderNews(res.articles);
+}
+
+function renderNews(news) {
+    const newsContainer = document.querySelector('.news-container .row');
+    let fragment = '';
+
+    news.forEach(newsItem => {
+        const el = newsTemplate(newsItem);
+        fragment += el;
+    })
+    newsContainer.insertAdjacentHTML('afterbegin', fragment);
+}
+
+function newsTemplate({ urlToImage, title, url, description }) {
+    return `
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 m-0">
+            <img src="${urlToImage}" class="card-img-top" alt="${title}">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">${title || 'Заголовка нету :('}</h5>
+                <p class="card-text">${description}</p>
+                <a href="${url}" class="btn btn-primary mt-auto">Прочитати всю новину</a>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">Last updated 3 mins ago</small>
+            </div>
+        </div>
+    </div>
+    `
+}
