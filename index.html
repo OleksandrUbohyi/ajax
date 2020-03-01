@@ -7,6 +7,7 @@
     <title>Document</title>
     <link rel=" stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -25,6 +26,20 @@
     </div>
 
     <div class="container">
+        <div class="toast" id="myToast" data-autohide="false" style="position: fixed; top: 20px; right: 20px;">
+            <div class="toast-header">
+                <strong class="mr-auto"><i class="fa fa-grav"></i> We miss you!</strong>
+                <small>11 mins ago</small>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+            </div>
+            <div class="toast-body">
+                It's been a long time since you visited us. We've something special for you. <a href="#">Click here!</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container">
         <div class="row">
 
         </div>
@@ -35,19 +50,19 @@
             <div class="col-md-6">
 
                 <div class="card bg-light">
-                    <form class="news-form card-body" novalidate="" action="" method="" id="bootstrapForm">
+                    <form class="card-body" novalidate="" action="" method="" id="bootstrapForm" name="news-form">
                         <h2 class="text-center">Пошук новин</h2>
 
                         <div class="form-group">
-                            <label class="h4 form-control-label country-select" for="country">Країна</label>
-                            <select class=" form-control" id="country">
+                            <label class="h4 form-control-label" for="country">Країна</label>
+                            <select class="form-control" id="country" name="country-select">
                                 <option value="ua">Україна</option>
                                 <option value="us">США</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <input type="text query-input" class="form-control" required"
+                            <input type="text query-input" class="form-control" name="query-input" required"
                                 placeholder="Введіть ваш запит">
                         </div>
 
@@ -65,14 +80,30 @@
     <div class="container news-container">
 
         <div class="card-deck">
+            <div class="preloader flex-grow-1 justify-content-center">
+                <div class="spinner-border text-info" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
             <div class="row">
 
             </div>
         </div>
+
     </div>
 
 
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
     <script src="script.js"></script>
+
 </body>
 
 </html>

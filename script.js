@@ -210,34 +210,66 @@ const newsService = (function () {
             }, callback)
         },
         everything(query, callback) {
-            http://newsapi.org/v2/everything?q=bitcoin&apiKey=47a87bd0ab604b76834b0e6d2fc9b5f7
             //реализовать выбор категории
-            http.get(`${apiUrl}/everything?q=${query}&apiKey=${apiKey}`, callback);
+            http.get({ url: `${apiUrl}/everything?q=${query}&apiKey=${apiKey}` }, callback);
         }
     }
 })();
 
 //Elements UI
-const form = document.querySelector('.news-form');
-const countrySelect = document.querySelector('.country-select');
-const queryInput = document.querySelector('.query-input');
+const form = document.forms['news-form'];//получаем форму по имени
+const countrySelect = form.elements['country-select'];
+const searchInput = form.elements['query-input'];
+const preloader = document.querySelector('.preloader');
 
-document.addEventListener('DOMContentLoaded', function () {
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
     loadNews();
 })
 
+// document.addEventListener('DOMContentLoaded', function () {
+//     loadNews();
+// })
+
 function loadNews() {
-    newsService.topHeadlines('ua', onGetResponse);
+    showPreloader(preloader);
+    const country = countrySelect.value;
+    const searchText = searchInput.value;
+
+    if (!searchText) {
+        newsService.topHeadlines(country, onGetResponse);
+    } else {
+        newsService.everything(searchText, onGetResponse);
+        searchInput.value = '';
+    }
 }
 
 
 // function onGetResponse(err, {articles}) { //можем деструктурировать response
 function onGetResponse(err, res) {
+    // if (err) {
+    //     showAlert(err, 'error-msg');
+    //     return; 
+    // }
+    hidePreloader(preloader);
+
+    if (!res.articles.length) {
+        // alert('нема новин');
+        document.querySelector('.news-container .row').innerHTML = 'За вашим запитом новин не знайдено';
+        //showEmptyMessage
+    }
+
     renderNews(res.articles);
+
 }
 
 function renderNews(news) {
     const newsContainer = document.querySelector('.news-container .row');
+
+    if (newsContainer.children.length) {
+        clearContainer(newsContainer);
+    }
+
     let fragment = '';
 
     news.forEach(newsItem => {
@@ -263,4 +295,23 @@ function newsTemplate({ urlToImage, title, url, description }) {
         </div>
     </div>
     `
+}
+
+// function showAlert(msg, type = "success") {
+//     M.toast({
+//         html: msg,
+//         classes: type
+//     })
+// }
+
+function clearContainer(container) {
+    container.innerHTML = '';
+}
+
+function showPreloader(el) {
+    el.style.display = 'flex';
+}
+
+function hidePreloader(el) {
+    el.style.display = 'none';
 }
